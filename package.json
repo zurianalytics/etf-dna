@@ -1,0 +1,26 @@
+{
+  "name": "my-app",
+  "scripts": {
+    "serve:parcel": "npx parcel src/**/main.scss src/**/*.bundle.js --out-dir dist/ ",
+    "serve:eleventy": "npx @11ty/eleventy --quiet --output=dist --input=src --serve",
+    "serve": "npx npm-run-all --parallel serve:eleventy serve:parcel",
+    "generate:parcel": "npx parcel build src/**/main.scss src/**/*.bundle.js --out-dir dist/",
+    "generate:eleventy": "npx @11ty/eleventy --quiet --output=dist --input=src",
+    "generate": "npx npm-run-all generate:parcel generate:eleventy",
+    "deploy": "deploy.sh"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
+    "countup.js": "^2.0.6",
+    "frappe-charts": "^1.5.2",
+    "json-formatter-js": "^2.3.4",
+    "tippy.js": "^6.2.6"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^0.11.0",
+    "parcel": "^1.12.4",
+    "rimraf": "^3.0.2",
+    "sass": "^1.26.10"
+  }
+}

@@ -1,0 +1,1 @@
+var JSONFormatter = require('json-formatter-js')

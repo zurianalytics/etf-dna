@@ -1,0 +1,113 @@
+// ============= Brand Colors =============
+// ======================================
+// Blues
+$color-blue-000: hsla(227, 50%, 95%, 1);
+$color-blue-100: hsla(227, 70%, 90%, 1); 
+$color-blue-200: hsla(227, 60%, 70%, 1); 
+$color-blt3-200: hsla(227, 60%, 70%, 0.3); 
+$color-blue-300: hsla(227, 50%, 50%, 1); 
+$color-blue-400: hsla(227, 52%, 25%, 1);
+$color-blue-500: hsl(227, 51%, 21%);
+$color-blue-500-alpha0: hsla(227, 52%, 21%, 0);
+$color-blue-600: hsla(227, 88%, 3%, 1);
+// Grayscales
+$color-gray-000: hsla(214, 20%, 99%, 1);
+$color-gray-100: hsla(210, 43%, 97%, 1);
+$color-gray-200: hsla(210, 43%, 90%, 1);
+$color-gray-300: hsla(214, 24%, 61%, 1);
+$color-gray-400: hsla(214, 24%, 41%, 1);
+$color-gray-500: hsla(214, 34%, 25%, 1);
+// Accents
+$color-green-100: hsla(154, 55%, 57%, 1);
+$color-green-200: hsla(154, 58%, 52%, 1);
+$color-green-400: hsla(154, 45%, 40%, 1);
+
+
+// ============= Brand Typography =============
+// ======================================
+@mixin typography-header 
+{
+  font-family: "Montserrat", 
+               "Verdana", 
+               "Geneva", sans-serif;
+  font-weight: bold;
+  font-display: swap;
+}
+
+@mixin typography-1 {
+  font-size: 2.6rem;
+  line-height: 2.8rem;
+  @include typography-header;
+}
+
+@mixin typography-2 {
+  font-size: 2rem;
+  line-height: 2.2rem;
+  @include typography-header;
+}
+
+@mixin typography-4 {
+  font-size: 1.6rem;
+  line-height: 2rem;
+  @include typography-header;
+}
+
+@mixin typography-5 {
+  font-size: 1rem;
+  line-height: 1.4rem;
+  @include typography-header;
+}
+
+@mixin typography-6 {
+  font-size: 1rem;
+  line-height: 1.8rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: none; /* Never autoresize text */
+}
+
+@mixin typography-footnote
+{
+  font-size: 0.7rem;
+  line-height: 1rem;
+}
+
+
+
+// ============= Brand Elevations =============
+// ======================================
+@mixin elevation-1
+{
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.03),
+  0 4px 8px rgba(0, 0, 0, 0.03), 0 8px 16px rgba(0, 0, 0, 0.03),
+  0 16px 32px rgba(0, 0, 0, 0.03), 0 32px 64px rgba(0, 0, 0, 0.03);
+}
+
+
+// ============= Brand Boxes =============
+// ======================================
+@mixin borders-box
+{
+  border-radius: 4px;
+}
+
+@mixin borders-box-layered
+{
+  &:first-child
+  {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  &:last-child
+  {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  & > *
+  {
+    padding: 0.8rem;
+  }
+}

@@ -1,0 +1,67 @@
+<div class = "container-fluid card" id = "main" menu-item = "ETF DNA" id="etf-dna" top>
+
+    <!-- Page content -->
+    <h1><i class = "zuri-icon dna size-l baseline left"></i>ETF Portfolio DNA</h1>
+
+    <div class = "funds row">
+        <h3>Selected Funds</h3>
+        <div class = "label">You can remove funds by clicking on them. You can add a new fund by adding it's ISIN + Allocation 
+            in the last tile
+        </div>
+        <div class = "fund"  v-for="(f, i) in funds" v-on:click="remove(i)">
+            <span v-if="f.error">
+                {{f.error}}
+            </span>
+          <h5 v-if="!f.error">  
+            <span>{{f.isin}}</span> <span class = "accent-green size">{{f.alloc}}%</span><br/>
+            <span class = "label">{{ f.name }}</span>
+          </h5>
+        </div><div class = "fund new">
+            <div class = "row">
+                <div class = "col-sm-4">
+                        <button v-on:click="addFund(newFund)"> <span class = "label">Add<br/>Fund</span></button>
+
+                </div>
+                <div class = "col-sm-8">
+                    <input minlength="1" placeholder = "ISIN" v-model = "newFund.isin"></input>
+                    <input minlength="1" type = "number" placeholder = "Allocation (e.g., 20)" v-model = "newFund.alloc"></input>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class = "error row" v-if="error">
+        <div class = "col-sm-12">
+            {{ error }}
+        </div>
+    </div>
+
+    <div class = "row" v-if="!error">
+
+      <div class = "col-sm-12">
+          <h3>Fund Fundamental Data</h3>
+          <div class = "label">
+            You can remove funds by clicking on the close icon on the tile. You can add a new fund by adding it's ISIN + Allocation in the last tile 
+          </div>
+          <br/>
+        <div class = "row">
+            <div class = "col-sm-4">
+                <h3>{{averageFee}}%</h3><span class = "label">Weighted Average Fee</span>
+              </div>
+              <div class = "col-sm-4">
+                <h3>{{distributionType}}</h3><span class = "label">Distribution Type</span>
+              </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <div class = "row">
+    <div class = "col-sm-6">
+        <canvas height = "220px" id = "regions"></canvas>
+    </div>
+      <div class = "col-sm-6">
+        <canvas height = "220px" id = "sectors"></canvas>
+      </div>
+    </div>
+  </div>

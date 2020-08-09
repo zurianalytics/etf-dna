@@ -1,0 +1,436 @@
+@charset "utf-8";
+@import "_fonts";
+@import "_brand";
+@import "_normalize";
+@import "_layout";
+@import "_icons";
+@import "_hamburger";
+
+/*! ---------------------
+  Global Styles
+  --------------------!*/
+html,
+body {
+  @include typography-6;
+  color: $color-gray-500;
+  padding: 0;
+  margin: 0;
+  background-color: $color-gray-000;
+  height: 100%;
+}
+
+/*! ---------------------
+  Accent and colors
+  --------------------!*/
+.accent-blue {
+  color: $color-blue-200;
+}
+
+.accent-green {
+  color: $color-green-100;
+}
+
+.accent-hard {
+  color: $color-green-100;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.accent-gray {
+  font-weight: bold;
+  color: $color-gray-400;
+}
+
+.accent-bold {
+  font-weight: bold;
+  color: $color-blue-200;
+}
+
+.accent-blink {
+  color: $color-green-100;
+  font-weight: bold;
+  margin-right: 10px;
+  animation: blinker-text 1.4s linear infinite;
+}
+
+@keyframes blinker-text {
+  50% {
+    color: #5dd9d7;
+    opacity: 0.7;
+  }
+}
+
+@keyframes blinker-border {
+  50% {
+    border-bottom-color: #5dd9d7;
+    opacity: 0.7;
+  }
+}
+
+/*! ---------------------
+  Design Components
+  -------------------- !*/
+.background {
+  background: linear-gradient(90deg, $color-gray-200 0%, $color-gray-100 100%);
+  top: 0;
+  z-index: 0;
+  position: absolute;
+  height: 100vh;
+  transform: skewY(-12deg);
+  margin-top: -50vh;
+  width: 100%;
+
+  .stripe-primary {
+    background: linear-gradient(
+      90deg,
+      rgba($color-blue-500, 0) 0%,
+      rgba($color-blue-500, 0) 40%,
+      $color-blue-500 50%,
+      $color-blue-400 100%
+    );
+    width: 100%;
+    height: 10vh;
+    position: absolute;
+    bottom: 0;
+  }
+
+  .stripe-secondary {
+    background: linear-gradient(
+      90deg,
+      $color-gray-100 50%,
+      $color-gray-200 100%
+    );
+    width: 50%;
+    height: 10vh;
+    margin-bottom: -10vh;
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+.card {
+  @include borders-box;
+  @include elevation-1;
+  background-color: $color-gray-000;
+
+  padding: 4rem;
+  @media (max-width: 992px) {
+    & {
+      padding: 2rem;
+    }
+  }
+}
+
+.funds
+{
+  display: block;
+  padding: 1rem;
+
+  .fund {
+
+    vertical-align: top;
+    @include elevation-1;
+    @include borders-box-layered;
+    display: inline-block;
+    width: 14rem;
+    color: $color-gray-000;
+    text-align: center;
+    background-color: $color-blue-400;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    
+    .label
+    {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    input {
+      padding: 1px 8px;
+      border: none;
+      border-bottom: 1px solid $color-green-100;
+      animation: blinker-border 1.4s linear infinite;
+      display: inline-block;
+      width: 100%;
+      font-size: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    &.new
+    {
+      cursor: inherit;
+      background-color: $color-gray-000;
+      color: inherit;
+    }
+  }
+}
+
+.tile,
+.inline {
+  @include borders-box;
+  background-color: $color-gray-100;
+  border: 1px solid $color-gray-200;
+  color: $color-gray-400;
+  padding: 2rem;
+}
+
+
+/*! ---------------------
+Side menu
+  -------------------- !*/
+nav.side-menu {
+  display: block;
+  // Center
+  top: 50%;
+  transform: translateY(-50%);
+  position: fixed;
+  font-weight: bold;
+  padding: 1.4rem;
+  z-index: 30;
+
+  // Section at the bottom
+  footer {
+    border-top: 1px solid $color-gray-100;
+  }
+
+  .note {
+    @include typography-footnote;
+    font-weight: bold;
+    color: $color-gray-300;
+  }
+
+  // Top header
+  .representation {
+    text-align: center;
+
+    .logo {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 80px;
+      margin-bottom: 0;
+    }
+  }
+
+  // Main list of links
+  & > ul {
+    line-height: 2rem;
+    border-top: 1px solid $color-gray-100;
+    font-size: 0.9rem;
+
+    .active > a {
+      color: $color-blue-200;
+    }
+
+    // First level headers
+    ul,
+    li {
+      line-height: 2rem;
+    }
+
+    li {
+      color: $color-gray-400;
+
+      // Second level headers
+      li {
+        padding-left: 1rem;
+        font-weight: normal;
+        font-size: 0.85rem;
+      }
+
+      ul {
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      &.active ul {
+        max-height: 400px;
+      }
+
+      ul,
+      li {
+        transition: all 0.6s 0s;
+      }
+    }
+  }
+
+  // Responsive styles
+  @media (max-width: 1200px) {
+    & {
+      padding: 0.6rem;
+    }
+  }
+
+  .action {
+    display: none;
+  }
+
+  @media (max-width: 1024px) {
+    & {
+      .action {
+        display: block;
+        margin-bottom: 2rem;
+      }
+
+      background-color: $color-gray-100;
+      left: 0;
+      top: 0;
+      transform: translate(0, 0);
+      height: 100vh;
+      padding: 1.4rem 0;
+      transition: all 0.3s;
+
+      // CLosed menu
+      width: 0;
+      & > .representation,
+      & > footer,
+      & > ul {
+        transform: scaleX(0);
+      }
+
+      // Open menu
+      &.is-active {
+        padding: 1.4rem 1.4rem;
+        width: 50vw;
+        text-align: center;
+
+        & > .representation,
+        & > footer,
+        & > ul {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+}
+
+/*! ---------------------
+  Content formatting styles
+  -------------------- !*/
+.content {
+  h1 {
+    @include typography-1;
+    color: $color-blue-500;
+  }
+
+  h2 {
+    @include typography-4;
+  }
+
+  h1,
+  h2 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  h3,
+  h6 {
+    @include typography-5;
+  }
+
+  & > .container-fluid {
+    border-top: 1px solid $color-gray-100;
+    padding-top: 3rem;
+
+    &:first-of-type {
+      border-top: none;
+      margin-top: 0;
+    }
+
+    margin-top: 12rem;
+
+    & > .row {
+      margin-top: 2rem;
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+
+  code,
+  .accent-box {
+    font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
+      "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace,
+      serif;
+    font-size: 12px;
+    line-height: 1.5;
+    hyphens: auto;
+  }
+
+  li,
+  .list {
+    border-top: 1px solid $color-gray-100;
+    padding: 1rem 0;
+  }
+}
+
+/*! ---------------------
+  Accents & Special
+  -------------------- !*/
+.content {
+  .label {
+    @include typography-footnote;
+    color: $color-gray-300;
+
+    &.top {
+      margin-bottom: 1rem;
+      display: block;
+    }
+  }
+
+  a.info {
+    cursor: help;
+  }
+
+  a.action {
+    cursor: pointer;
+  }
+
+  // External && info
+  a.info,
+  a.link {
+    display: inline-block;
+    color: $color-blue-200;
+
+    &.link {
+      /* Effect */
+      & {
+        padding: 0 4px;
+        position: relative;
+        display: inline-block;
+        -webkit-transition: color 0.3s;
+        -moz-transition: color 0.3s;
+        transition: color 0.3s;
+
+        &::before {
+          position: absolute;
+          top: 60%;
+          left: 50%;
+          color: transparent;
+          content: "•";
+          text-shadow: 0 0 transparent;
+          font-size: 1em;
+          -webkit-transition: text-shadow 0.3s, color 0.3s;
+          -moz-transition: text-shadow 0.3s, color 0.3s;
+          transition: text-shadow 0.3s, color 0.3s;
+          -webkit-transform: translateX(-50%);
+          -moz-transform: translateX(-50%);
+          transform: translateX(-50%);
+          pointer-events: none;
+        }
+
+        &:hover::before,
+        &:focus::before {
+          color: $color-blue-200;
+          text-shadow: 10px 0 $color-blue-200, -10px 0 $color-blue-200;
+        }
+      }
+    }
+  }
+
+  code.inline {
+    display: inline-block;
+    padding: 0.15rem 0.3rem;
+  }
+}
