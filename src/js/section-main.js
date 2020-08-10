@@ -16,61 +16,35 @@ new Vue({
   },
 
   computed: {
+
+    totalAllocation()
+    {
+      return this.funds.reduce((acc, f) => acc + f.alloc, 0)
+    },
+
     // Compute the average fee as the weighted average
     averageFee() {
       return this.funds
         .reduce(
-          (accumulator, f) => accumulator + (f.alloc / 100) * f.totalFee,
-          0
-        )
+          (accumulator, f) => accumulator + f.alloc / this.totalAllocation * f.totalFee, 0)
         .toFixed(2);
     },
 
-    distributionType(){
-        let dists = new Set(this.funds.map(f => f.distributionType))
+    distributionType() {
+      let dists = new Set(this.funds.map((f) => f.distributionType));
 
-        if (dists.size > 1)
-            return "Mixed"
-        
-        return dists.values().next().value
+      if (dists.size > 1) return "Mixed";
+
+      return dists.values().next().value;
     },
 
     // Compute sector allocations as weighter averages
     sectors() {
-      let sectors = {};
-
-      this.funds.forEach((f) =>
-        f.sectors.forEach((s) => {
-          // Format Stuff like Informatio_Technology --> IT
-          let sector = s.sector.includes("_")
-            ? s.sector.split("_")[0].charAt(0) +
-              s.sector.split("_")[1].charAt(0)
-            : s.sector;
-          if (!sectors[sector]) sectors[sector] = 0;
-          sectors[sector] += (f.alloc * s.percentage) / 100;
-          return sectors;
-        })
-      );
-
-      return Object.keys(sectors)
-        .map((k) => new Object({ k: k, v: sectors[k] }))
-        .sort((a, b) => b.v - a.v);
+      return this.aggregateEntries("sectors", "sector");
     },
 
     regions() {
-      let regions = {};
-
-      this.funds.forEach((f) =>
-        f.regions.forEach((r) => {
-          if (!regions[r.country]) regions[r.country] = 0;
-          regions[r.country] += (f.alloc * r.percentage) / 100;
-          return regions;
-        })
-      );
-
-      return Object.keys(regions)
-        .map((k) => new Object({ k: k, v: regions[k] }))
-        .sort((a, b) => b.v - a.v);
+      return this.aggregateEntries("regions", "country");
     },
   },
 
@@ -78,25 +52,76 @@ new Vue({
     // Redraw sectors chart when one of the sectors changes
     sectors(s) {
       if (this.sectorsChart) this.sectorsChart.destroy();
-      this.sectorsChart = this.drawChart("sectors", "Sector Allocation", s, "right");
+      this.sectorsChart = this.drawChart(
+        "sectors",
+        "Sector Allocation",
+        s,
+        "right"
+      );
     },
     // Redraw regions chart when one of the region changes
     regions(s) {
       if (this.regionsChart) this.regionsChart.destroy();
-      this.regionsChart = this.drawChart("regions", "Geographic Allocation", s, "left");
+      this.regionsChart = this.drawChart(
+        "regions",
+        "Geographic Allocation",
+        s,
+        "left"
+      );
     },
   },
 
   methods: {
+    aggregateEntries(entriesName, entryName) {
+      let aggregates = {};
+      let unrepresented = 0;
 
-    addFund()
-    {
-        this.addFund(this.newFund)
+      // Aggregate the entires into the hashamp
+      this.funds.forEach((f) => {
+        // Stuff that is left unrepresented
+        unrepresented = unrepresented + f.alloc;
+
+        f[entriesName].forEach((s) => {
+          // Format Stuff like Informatio_Technology --> IT
+          let entry = s[entryName].includes("_")
+            ? s[entryName].split("_")[0].charAt(0) +
+              s[entryName].split("_")[1].charAt(0)
+            : s[entryName];
+          if (!aggregates[entry]) aggregates[entry] = 0;
+          aggregates[entry] += f.alloc * s.percentage;
+          unrepresented = unrepresented - f.alloc * (s.percentage / 100);
+        });
+
+      });
+
+      // Transform into an array
+      let arr = Object.keys(aggregates)
+        .map((k) => new Object({ k: k, v: aggregates[k] }))
+        .sort((a, b) => b.v - a.v);
+
+      // Limit to maximum 28 entries
+      // Add unrepresented as well as spliced entries
+      arr.push({
+        k: "OTH",
+        v: arr.splice(27).reduce((acc, o) => acc + o.v, unrepresented),
+      });
+
+      // Standarize as percentage
+      let sum = arr.reduce((acc, o) => acc + o.v, 0)
+      arr = arr.map(o => new Object({k: o.k, v: (o.v / sum * 100).toFixed(2)}))
+
+      return arr;
     },
 
-    remove (index) {
-        this.$delete(this.funds, index)
-        window.location.hash = JSON.stringify(this.funds.map(f => new Object({isin: f.isin, alloc: f.alloc})))
+    addFund() {
+      this.addFund(this.newFund);
+    },
+
+    remove(index) {
+      this.$delete(this.funds, index);
+      window.location.hash = JSON.stringify(
+        this.funds.map((f) => new Object({ isin: f.isin, alloc: f.alloc }))
+      );
     },
 
     extendChartJSWithTextInside() {
@@ -191,12 +216,6 @@ new Vue({
     },
 
     drawChart(element, title, data, position) {
-      // Standarize data to 100 
-      let other = 100 - data.reduce((acc, d) => acc + d.v, 0)
-      
-      if (other > 1)
-        data.push({k: 'OTH', v: other})
-    
       // And for a doughnut chart
       return new Chart(document.getElementById(element).getContext("2d"), {
         type: "doughnut",
@@ -269,35 +288,35 @@ new Vue({
       this.fundCandidates.forEach(this.addFund);
     },
 
-    addFund(fundCandidate)
-    {
-        console.log(fundCandidate);
+    addFund(fundCandidate) {
 
-        axios
-            .get(this.api + fundCandidate.isin)
-            .then((response) => {
-            let fund = response.data;
-            fund.alloc = fundCandidate.alloc;
-            this.funds.push(fund);
-            this.error = null
+      axios
+        .get(this.api + fundCandidate.isin)
+        .then((response) => {
+          let fund = response.data;
+          fund.alloc = Number(fundCandidate.alloc);
+          this.funds.push(fund);
+          this.error = null;
 
-            window.location.hash = JSON.stringify(this.funds.map(f => new Object({isin: f.isin, alloc: f.alloc})))
-            })
-            // Free requests have expired
-            .catch((error) => {
-            console.error(error);
+          window.location.hash = JSON.stringify(
+            this.funds.map((f) => new Object({ isin: f.isin, alloc: f.alloc }))
+          );
+        })
+        // Free requests have expired
+        .catch((error) => {
+          console.error(error);
 
-            if (typeof error.response === "undefined")
-                this.error = "Unspecified error occured.";
-            else if (error && error.response.status == 404)
-                this.error =
-                "Unfortunatelly the fund provided could not be found. Is this ISIN available on an european exchange?";
-            else if (error && error.response.status == 401)
-                this.error =
-                "Unfortunatelly your free requests have expired." +
-                " Please feel free to visit again tomorrow, or subscribe to a plan.";
-            });
-    }
+          if (typeof error.response === "undefined")
+            this.error = "Unspecified error occured.";
+          else if (error && error.response.status == 404)
+            this.error =
+              "Unfortunatelly the fund provided could not be found. Is this ISIN available on an european exchange?";
+          else if (error && error.response.status == 401)
+            this.error =
+              "Unfortunatelly your free requests have expired." +
+              " Please feel free to visit again tomorrow, or subscribe to a plan.";
+        });
+    },
   },
 
   /**
