@@ -5,8 +5,8 @@
 
     <div class = "funds row">
         <h3>Selected Funds</h3>
-        <div class = "label">You can remove funds by clicking on them. You can add a new fund by adding it's ISIN + Allocation 
-            in the last tile
+        <div class = "label">You can remove funds by clicking on them. You can add a new fund by adding its ISIN + Allocation (%) 
+            in the last tile.
         </div>
         <div class = "fund"  v-for="(f, i) in funds" v-on:click="remove(i)">
             <span v-if="f.error">
@@ -24,7 +24,7 @@
                 </div>
                 <div class = "col-sm-8">
                     <input minlength="1" placeholder = "ISIN" v-model = "newFund.isin"></input>
-                    <input minlength="1" type = "number" placeholder = "Allocation (e.g., 20)" v-model = "newFund.alloc"></input>
+                    <input minlength="1" type = "number" placeholder = "Allocation (%)" v-model = "newFund.alloc"></input>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
       <div class = "col-sm-12">
           <h3>Fund Fundamental Data</h3>
           <div class = "label">
-            You can remove funds by clicking on the close icon on the tile. You can add a new fund by adding it's ISIN + Allocation in the last tile 
+            You can remove funds by clicking on the close icon on the tile. You can add a new fund by adding its ISIN + Allocation (%) in the last tile.
           </div>
           <br/>
         <div class = "row">
